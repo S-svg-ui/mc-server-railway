@@ -6,7 +6,7 @@ function startBot() {
     host: 'mumumelelo.falix.gg',
     port: 25565,
     username: 'AFK_24_7',
-    version: "1.21.1"
+    version: "1.21.1",
     auth: 'offline',
   })
 

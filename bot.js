@@ -1,5 +1,5 @@
 const mineflayer = require('mineflayer')
-#hi
+// hi
 function startBot() {
 
   const bot = mineflayer.createBot({

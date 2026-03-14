@@ -1,7 +1,7 @@
 const http = require('http')
 const mineflayer = require('mineflayer')
 
-// ⭐ Railway uptime web server (VERY IMPORTANT)
+// ⭐ Railway uptime web server (VERY IMPORTANT) hi
 http.createServer((req, res) => {
   res.write("bot alive")
   res.end()

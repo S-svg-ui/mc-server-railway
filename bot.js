@@ -7,7 +7,7 @@ function startBot() {
     port: 25565,
     username: 'AFK_24_7',
     version: "1.21.1"
-    auth: false
+    auth: false,
   })
 
   bot.on('spawn', () => {

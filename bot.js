@@ -1,7 +1,7 @@
 const http = require('http')
 const mineflayer = require('mineflayer')
 
-// ⭐ Railway uptime web server
+// ⭐ Railway uptime web server (VERY IMPORTANT)
 http.createServer((req, res) => {
   res.write("bot alive")
   res.end()
@@ -32,10 +32,10 @@ function startBot() {
     bot.acceptResourcePack()
   })
 
-  // ⭐ Auto reconnect
+  // ⭐ When bot disconnects
   bot.on('end', () => {
     console.log("❌ Disconnected — reconnecting in 10s")
-    setTimeout(startBot, 10000)
+    setTimeout(startBotWrapper, 10000)
   })
 
   bot.on('kicked', (reason) => {
@@ -47,4 +47,14 @@ function startBot() {
   })
 }
 
-startBot()
+// ⭐ FULL watchdog restart system (never die)
+function startBotWrapper() {
+  try {
+    startBot()
+  } catch (e) {
+    console.log("💀 Crash detected — restarting in 15s")
+    setTimeout(startBotWrapper, 15000)
+  }
+}
+
+startBotWrapper()

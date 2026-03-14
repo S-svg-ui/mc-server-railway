@@ -10,7 +10,7 @@ http.createServer((req, res) => {
 function startBot() {
 
   const bot = mineflayer.createBot({
-    host: 'mumumelelo.falix,gg',
+    host: 'mumumelelo.falix.gg',
     port: 26737,
     username: 'AFK_24_7',
     version: '1.21.1',

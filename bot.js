@@ -109,15 +109,15 @@ function randomChatLoop(bot) {
 
   const msgs = [
     "lol",
-    "brb",
-    "lag?",
-    "hmm",
-    "anyone here",
-    "ok",
-    "nice",
+    "Shreyas is the GOAT",
+    "sabh yaha pe gay hain",
+    "jyada karoge tou gaand mein TNT ghusa dunga",
+    "FIRST ONE TO MOVE IS GAY",
+    "jinda hai noob?",
+    "tu Noob hai",
     "wtf",
-    "hahaha",
-    "wait"
+    "maar jao",
+    "U GAY"
   ]
 
   setInterval(() => {

@@ -1,4 +1,3 @@
-```js
 const http = require('http')
 const mineflayer = require('mineflayer')
 

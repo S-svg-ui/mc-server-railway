@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "bot.js",
   "dependencies": {
-    "mineflayer": "^4.20.0"
-    "puppeteer": "^22.0.0"
+    "mineflayer": "^4.20.0",
+    "puppeteer": "^22.0.0",
   }
 }

@@ -10,8 +10,8 @@ http.createServer((req, res) => {
 function startBot() {
 
   const bot = mineflayer.createBot({
-    host: 'HuntCoreSMP.aternos.me',
-    port: parseInt(process.env.MC_PORT) || 25565,
+    host: 'mumumelelo.falix.gg',
+    port: parseInt(process.env.MC_PORT) || 26737,
     username: 'AFK_24_7',
     version: '1.21.1',
     auth: 'offline'

@@ -1,4 +1,4 @@
-:::writing{variant="standard" id="10007"}
+writing{variant="standard" id="10007"}
 const http = require('http')
 const mineflayer = require('mineflayer')
 
@@ -161,4 +161,4 @@ function startBotWrapper() {
 }
 
 startBotWrapper()
-:::
+

@@ -1,4 +1,3 @@
-writing{variant="standard" id="10007"}
 const http = require('http')
 const mineflayer = require('mineflayer')
 
@@ -97,10 +96,8 @@ function startBot() {
   bot.on('resourcePack', () => bot.acceptResourcePack())
 
   bot.on('end', () => {
-    console.log("Disconnected — cooling down")
-    const delay = rand(60000,120000)
-    console.log("Reconnecting in", delay/1000,"sec")
-    setTimeout(startBotWrapper, delay)
+    console.log("Disconnected — reconnecting")
+    setTimeout(startBotWrapper, rand(60000,120000))
   })
 
   bot.on('kicked', r => console.log("Kicked:", r))
@@ -115,19 +112,10 @@ function humanBehaviourLoop(bot) {
     const actions = ['forward','back','left','right']
     const action = actions[rand(0, actions.length)]
 
-    const yaw = Math.random() * Math.PI * 2
-    const pitch = (Math.random() - 0.5) * 0.6
-    bot.look(yaw, pitch, true)
-
-    if (Math.random() > 0.8) bot.setControlState('sneak', true)
-    if (Math.random() > 0.85) bot.setControlState('sprint', true)
-
     bot.setControlState(action, true)
 
     setTimeout(() => {
       bot.setControlState(action, false)
-      bot.setControlState('sneak', false)
-      bot.setControlState('sprint', false)
     }, actionTime)
 
   }, rand(20000,50000))
@@ -155,10 +143,8 @@ function startBotWrapper() {
   try {
     startBot()
   } catch {
-    console.log("Crash — restarting later")
     setTimeout(startBotWrapper, 15000)
   }
 }
 
 startBotWrapper()
-

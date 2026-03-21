@@ -1,146 +1,194 @@
 const http = require('http')
 const mineflayer = require('mineflayer')
+const puppeteer = require("puppeteer")
 
-// ⭐ Railway uptime web server
+// ⭐ KEEP ALIVE SERVER (for UptimeRobot)
 http.createServer((req, res) => {
-  res.write("alive")
-  res.end()
+res.write("alive")
+res.end()
 }).listen(process.env.PORT || 3000)
 
 function startBot() {
 
-  const bot = mineflayer.createBot({
-    host: 'mumumelelo.falix.gg',
-    port: parseInt(process.env.MC_PORT) || 26737,
-    username: 'AFK_24_7',
-    version: '1.21.1',
-    auth: 'offline'
-  })
+const bot = mineflayer.createBot({
+host: 'mumumelelo.falix.gg',
+port: parseInt(process.env.MC_PORT) || 26737,
+username: 'AFK_24_7',
+version: '1.21.1',
+auth: 'offline'
+})
 
-  bot.once('spawn', () => {
-    console.log("✅ Joined server")
+bot.once('spawn', () => {
+console.log("✅ Joined server")
+humanBehaviourLoop(bot)
+randomChatLoop(bot)
+})
 
-    humanBehaviourLoop(bot)
-    randomChatLoop(bot)
+// ⭐⭐⭐ SMART VERIFY SYSTEM ⭐⭐⭐
+bot.on('messagestr', async (msg) => {
 
-  })
+```
+const m = msg.toLowerCase()
+console.log("CHAT:", msg)
 
-  // ⭐ Falix auto confirm
-  bot.on('messagestr', (msg) => {
-    const m = msg.toLowerCase()
-    console.log("CHAT:", msg)
+// normal confirm verification
+if (
+  m.includes("still playing") ||
+  m.includes("paused") ||
+  m.includes("confirm") ||
+  m.includes("click")
+) {
+  console.log("⚡ Falix confirm detected")
+  setTimeout(() => bot.chat("/confirm"), rand(4000,12000))
+}
 
-    if (
-      m.includes("still playing") ||
-      m.includes("paused") ||
-      m.includes("confirm") ||
-      m.includes("click")
-    ) {
-      console.log("⚡ Falix check detected")
-      bot.chat("/confirm")
+// ⭐ WEBSITE BUTTON VERIFY
+if (msg.includes("falixnodes.net/verify")) {
+
+  console.log("🌐 Verification link detected")
+
+  const linkMatch = msg.match(/https?:\/\/[^\s]+/)
+  if (!linkMatch) return
+
+  const link = linkMatch[0]
+
+  const delay = rand(12000,30000)
+  console.log("⏳ Opening browser in", delay/1000,"seconds")
+
+  setTimeout(async () => {
+
+    try {
+
+      const browser = await puppeteer.launch({
+        headless: true,
+        args: [
+          "--no-sandbox",
+          "--disable-setuid-sandbox",
+          "--disable-dev-shm-usage",
+          "--disable-gpu"
+        ]
+      })
+
+      const page = await browser.newPage()
+
+      await page.goto(link, { waitUntil: "networkidle2" })
+
+      await page.evaluate(() => {
+        const btn =
+          document.querySelector("button") ||
+          document.querySelector(".btn") ||
+          document.querySelector("#verify") ||
+          document.querySelector("[type='submit']")
+        if (btn) btn.click()
+      })
+
+      console.log("✅ Verify button clicked")
+
+      await new Promise(r => setTimeout(r, 6000))
+
+      await browser.close()
+
+      console.log("✅ Browser closed — verification done")
+
+    } catch (err) {
+      console.log("❌ Puppeteer verify failed:", err.message)
     }
-  })
 
-  bot.on('resourcePack', () => bot.acceptResourcePack())
+  }, delay)
+}
+```
 
-  bot.on('end', () => {
-    console.log("❌ Disconnected — reconnecting")
-    setTimeout(startBotWrapper, 5000)
-  })
+})
 
-  bot.on('kicked', r => console.log("⚠️ Kicked:", r))
-  bot.on('error', e => console.log("💥 Error:", e))
+bot.on('resourcePack', () => bot.acceptResourcePack())
+
+bot.on('end', () => {
+console.log("❌ Disconnected — reconnecting")
+setTimeout(startBotWrapper, 7000)
+})
+
+bot.on('kicked', r => console.log("⚠️ Kicked:", r))
+bot.on('error', e => console.log("💥 Error:", e))
 }
 
 // ⭐ HUMAN MOVEMENT AI
 function humanBehaviourLoop(bot) {
 
-  setInterval(() => {
+setInterval(() => {
 
-    const actionTime = rand(5000, 40000) // walk duration
-    const idleTime = rand(8000, 60000)   // idle duration
+```
+const actionTime = rand(5000, 40000)
+const idleTime = rand(8000, 60000)
 
-    const actions = ['forward','back','left','right']
-    const action = actions[rand(0, actions.length)]
+const actions = ['forward','back','left','right']
+const action = actions[rand(0, actions.length)]
 
-    // head random
-    const yaw = Math.random() * Math.PI * 2
-    const pitch = (Math.random() - 0.5) * 0.6
-    bot.look(yaw, pitch, true)
+const yaw = Math.random() * Math.PI * 2
+const pitch = (Math.random() - 0.5) * 0.6
+bot.look(yaw, pitch, true)
 
-    // random sneak hold
-    if (Math.random() > 0.7) bot.setControlState('sneak', true)
+if (Math.random() > 0.7) bot.setControlState('sneak', true)
+if (Math.random() > 0.75) bot.setControlState('sprint', true)
 
-    // random sprint burst
-    if (Math.random() > 0.75) bot.setControlState('sprint', true)
+bot.setControlState(action, true)
 
-    bot.setControlState(action, true)
+const jumpInterval = setInterval(() => {
+  if (Math.random() > 0.5) {
+    bot.setControlState('jump', true)
+    setTimeout(()=> bot.setControlState('jump', false), 300)
+  }
+  bot.swingArm()
+}, rand(2000,6000))
 
-    // occasional jump spam
-    const jumpInterval = setInterval(() => {
-      if (Math.random() > 0.5) {
-        bot.setControlState('jump', true)
-        setTimeout(()=> bot.setControlState('jump', false), 300)
-      }
-      bot.swingArm()
-    }, rand(2000,6000))
+setTimeout(() => {
 
-    setTimeout(() => {
+  clearInterval(jumpInterval)
 
-      clearInterval(jumpInterval)
+  bot.setControlState(action, false)
+  bot.setControlState('sneak', false)
+  bot.setControlState('sprint', false)
 
-      bot.setControlState(action, false)
-      bot.setControlState('sneak', false)
-      bot.setControlState('sprint', false)
+  setTimeout(() => {}, idleTime)
 
-      // FULL idle phase (very human)
-      setTimeout(() => {
-        // do nothing
-      }, idleTime)
+}, actionTime)
+```
 
-    }, actionTime)
-
-  }, rand(15000,45000))
+}, rand(15000,45000))
 
 }
 
 // ⭐ RANDOM CHAT AI
 function randomChatLoop(bot) {
 
-  const msgs = [
-    "lol",
-    "Shreyas is the GOAT",
-    "sabh yaha pe gay hain",
-    "jyada karoge tou gaand mein TNT ghusa dunga",
-    "FIRST ONE TO MOVE IS GAY",
-    "jinda hai noob?",
-    "tu Noob hai",
-    "wtf",
-    "maar jao",
-    "U GAY"
-  ]
+const msgs = [
+"lol",
+"lag ho raha",
+"kaun hai yaha",
+"wtf",
+"bruh",
+"noob server"
+]
 
-  setInterval(() => {
-    if (Math.random() > 0.6) {
-      const msg = msgs[rand(0, msgs.length)]
-      bot.chat(msg)
-    }
-  }, rand(90000, 240000))
+setInterval(() => {
+if (Math.random() > 0.6) {
+const msg = msgs[rand(0, msgs.length)]
+bot.chat(msg)
+}
+}, rand(90000, 240000))
 
 }
 
 function rand(min, max) {
-  return Math.floor(Math.random() * (max - min)) + min
+return Math.floor(Math.random() * (max - min)) + min
 }
 
-// ⭐ WATCHDOG
 function startBotWrapper() {
-  try {
-    startBot()
-  } catch {
-    console.log("💀 Crash — restarting")
-    setTimeout(startBotWrapper, 10000)
-  }
+try {
+startBot()
+} catch {
+console.log("💀 Crash — restarting")
+setTimeout(startBotWrapper, 10000)
+}
 }
 
 startBotWrapper()

@@ -12,7 +12,7 @@ function startBot() {
 
   const bot = mineflayer.createBot({
     host: 'mumumelelo.falix.gg',
-    port: parseInt(process.env.MC_PORT) || 26737,
+    port: parseInt(process.env.MC_PORT) || 23538,
     username: 'AFK_24_7',
     version: '1.21.1',
     auth: 'offline'
